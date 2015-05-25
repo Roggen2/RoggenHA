@@ -72,9 +72,9 @@ public class Item implements Comparable<Item> {
      * @return -1 wenn kleiner, 1 wenn groesser, 0 wenn gleich
      */
     public int compareTo(Item o) {
-        if (!(o instanceof Item)) {
+       /* if (!(o instanceof Item)) {
             throw new IllegalArgumentException("incompatible types");
-        }
+        }*/
         Item a = (Item) o;
         if (this.name.equals(a.name)) {
             if (this.value == a.value) {
