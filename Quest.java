@@ -47,12 +47,24 @@ public class Quest implements Comparable<Quest> {
 		return visible;
 	}
 	
+	public void setFinished(boolean finished) {
+		this.finished = finished;
+	}
+	
+	public void setVisible(boolean visible) {
+		this.visible = visible;
+	}
+	
 	public String toString() {
-		return  "Name: " + name + "\n" +
-				"Abgeschlossen: " + (finished ? "ja" : "nein") + "\n" +
-				"Vorquest: " + prequest + "\n" +
-				"Notwendiger Questgegenstand: " + target + "\n" +
-				"Notewendige Anzahl an Gegenständen: " + quantity + "\n" ; 
+		if(this.visible) {
+			return  "Name: " + name + "\n" +
+					"Abgeschlossen: " + (finished ? "ja" : "nein") + "\n" +
+					"Vorquest: " + prequest + "\n" +
+					"Notwendiger Questgegenstand: " + target + "\n" +
+					"Notewendige Anzahl an Gegenständen: " + quantity + "\n" ;
+		}
+		
+		return  "";
 				
 	}
 	

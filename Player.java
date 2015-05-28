@@ -98,6 +98,11 @@ public class Player extends Character {
     public int getRemainingItemUses() {
         return remainingItemUses;
     }
+    
+    //NEW
+    public Inventory<Quest> getQuestList() {
+    	return questList;
+    }
 
     /**
      * Heal boolean.

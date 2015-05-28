@@ -26,13 +26,34 @@ public class Questmaster {
 		finishedQuests = new Inventory<>();
 	}
 	
-	public boolean finishedQuest(Quest quest) {
+	public boolean isQuestfinished(Quest quest) {
 		for(int i= 0; i < costumer.getItemInventory().length(); i++) {
 			if(costumer.getItemInventory().getItem(i).getName().equals(quest.getTarget())) {
 				return costumer.getItemInventory().getQuantity(costumer.getItemInventory().getItem(i)) == quest.getQuantity();
 			}
 		}
 		return false;
+	}
+	//ändert den status er quests bei spieler und questmaster
+	public void questUpdate() {
+		//setzt beendete quests in der liste des masters beendet
+		for(int i= 0; i < allQuests.length(); i++) {
+			if(isQuestfinished(allQuests.getItem(i))) {
+				allQuests.getItem(i).setFinished(true);
+			}
+		}
+		for(int i= 0; i < costumer.getQuestList().length(); i++) {
+			if(isQuestfinished(costumer.getQuestList().getItem(i))) {
+				costumer.getQuestList().getItem(i).setFinished(true);
+			}
+		}
+	}
+	public Inventory<Quest> updateFinishedQuests() {
+		
+	}
+	
+	public Inventory<Quest> updateVisibleQuests() {
+		
 	}
 	
 	
