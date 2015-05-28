@@ -2,7 +2,7 @@ import java.util.Scanner;
 
 public class dealer {
     /**
-    * Inventar des Händlers
+    * Inventar des Hï¿½ndlers
     */
     private Inventory<Item> inventory = new Inventory<>();
     /**
@@ -13,8 +13,8 @@ public class dealer {
     private Player customer;
     public dealer(Player p){
         this.customer = p;
-        this.customer.setGold(200);
-        ItemReader ir = new ItemReader("item.csv");
+       // this.customer.setGold(200);
+        MyReader ir = new MyReader("item.csv");
         allItems = ir.getItems();
         //System.out.println(allItems);
         while (this.inventory.isEmpty()) { 
