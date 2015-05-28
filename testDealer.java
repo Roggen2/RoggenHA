@@ -11,7 +11,7 @@ public class testDealer {
         for (int i = 0;i < allItems.length() ;i++ ) {
             p.getInventory().insert(allItems.getItem(i));
         }
-        dealer d = new dealer(p);
+        Dealer d = new Dealer(p);
         d.buy();
         
     }

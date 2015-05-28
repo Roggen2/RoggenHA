@@ -11,16 +11,23 @@ public class Quest implements Comparable<Quest> {
 	
 	private boolean finished;
 	
+	private boolean visible;
+	
 	public Quest(String name, String prequest, String target, int quantity) {
 		this.name = name;
 		this.prequest = prequest;
 		this.target = target;
 		this.quantity = quantity;
 		this.finished = false;
+		this.visible = (prequest.equals(""));
 	}
 
 	public int compareTo(Quest quest) {
 		return 0;
+	}
+	
+	public boolean isVisible() {
+		return visible;
 	}
 	
 	public String toString() {
