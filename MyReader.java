@@ -18,7 +18,7 @@ public class MyReader{
             
             while (sc.hasNextLine()) { 
                 line = sc.nextLine();
-               // s = s.replaceAll(" ", "");
+               // s = s.replaceAll(" ", "");//NEW
                 String[] stringArray = line.split(", ");
                 String name = stringArray[0];
                 double value = Double.parseDouble(stringArray[1]);
@@ -30,7 +30,7 @@ public class MyReader{
         
         return inv;
     }
-    
+    //NEW
     public Inventory<Quest> getQuests() {
     	Inventory<Quest> inv = new Inventory<>();
         
@@ -41,7 +41,7 @@ public class MyReader{
             
             while (sc.hasNextLine()) { 
                 line = sc.nextLine();
-               // s = s.replaceAll(" ", "");
+               // s = s.replaceAll(" ", "");//NEW
                 String[] stringArray = line.split(", ");
                 String name = stringArray[0];
                 String prequest = stringArray[1];

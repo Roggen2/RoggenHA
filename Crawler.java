@@ -28,7 +28,8 @@ public class Crawler {
                 input = input.toLowerCase();
                 char direction = input.charAt(0);
                 if (direction == 'i') {
-                    System.out.println(p.getInventory());
+                	//NEW
+                    System.out.println(p.getItemInventory());
                     System.out.println(p.getGold() + " Gold.");
                     continue;
                 }

@@ -47,6 +47,16 @@ public class Inventory<T extends Comparable<T> > implements List<T> {
             }
         }
     }
+    //NEW
+    public int getQuantity(T x) {
+    	int count = 0;
+    	for(int i = 0; i < this.length(); i++) {
+    		if(this.getItem(i).equals(x)) {
+    			count++; 
+    		}
+    	}
+    	return count;
+    }
     
     /**
      * Liefert nächstes Inventar.
@@ -203,5 +213,6 @@ public class Inventory<T extends Comparable<T> > implements List<T> {
         return s;
         //return isEmpty() ? "leeres Inventar" : "-" + next.item.toString()+next.next.toString();
     }
+    
     
 }

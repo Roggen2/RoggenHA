@@ -400,8 +400,9 @@ public class Level {
                 System.out.println("Game Over!");
                 System.exit(0);
             } else if (m.isDefeated()) {
-                Inventory<Item> mI = m.getInventory();
-                Inventory<Item> pI = p.getInventory();
+                //NEW
+            	Inventory<Item> mI = m.getItemInventory();
+                Inventory<Item> pI = p.getItemInventory();
                 p.setGold(m.getGold() + p.getGold());
                 System.out.println("Spieler gewinnt!");
                 for(int i = 0; i < mI.length(); i++) {

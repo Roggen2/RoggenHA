@@ -136,7 +136,9 @@ public class Character {
     /**
      * Gets Inventory
      */
-    public Inventory<Item> getInventory() {
+    
+    //NEW
+    public Inventory<Item> getItemInventory() {
         return this.inventory;
     }
     

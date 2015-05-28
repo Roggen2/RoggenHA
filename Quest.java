@@ -26,6 +26,23 @@ public class Quest implements Comparable<Quest> {
 		return 0;
 	}
 	
+	public String getTarget() {
+		return this.target;
+	}
+	
+	public String getPreQuest() {
+		return this.prequest;
+	}
+	public int getQuantity() {
+		return this.quantity;
+	}
+	public String getName() {
+		return this.name;
+	}
+	public boolean isFinished() {
+		return this.finished;
+	}
+	
 	public boolean isVisible() {
 		return visible;
 	}

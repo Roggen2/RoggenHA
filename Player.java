@@ -30,6 +30,9 @@ public class Player extends Character {
     /**
      * The constant HARD_HIT_COST.
      */
+    //NEW
+    private Inventory<Quest> questList;
+    
     public static final int HARD_HIT_COST = 20;
     /**
      * The constant HARD_HIT_SELF_DAMAGE_PERCENT.
@@ -84,6 +87,7 @@ public class Player extends Character {
         this.ap = maxAp;
         this.apRegen = apRegen;
         setGold(0);
+        this.questList = new Inventory<>();
     }
 
     /**
