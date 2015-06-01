@@ -37,6 +37,10 @@ public class Level {
      */
     public static final char BATTLE = 'B';
     /**
+     * Der Questmaster
+     */
+    public static final char QUESTMASTER = 'Q';
+    /**
      * The constant GOAL.
      */
     public static final char GOAL = 'Z';
@@ -281,7 +285,7 @@ public class Level {
      *
      * @param p the player
      */
-    public void handleCurrentFieldEvent(Player p) {
+    public void handleCurrentFieldEvent(Player p, Questmaster master) {
         char field = getField();
         switch (field) {
             case Level.SMITHY:
@@ -295,14 +299,25 @@ public class Level {
             case Level.BATTLE:
                 startBattle(p);
                 break;
+            //case Level.QUESTMASTER:
+            	//startAdventure(p, master);
             case Level.GOAL:
-                System.out.println("Herzlichen Glückwunsch! Sie haben gewonnen!");
+                // Wincondition einbauen.
+            	System.out.println("Herzlichen Glückwunsch! Sie haben gewonnen!");
                 System.exit(0);
                 break;
         }
         clearField();
     }
-
+    //NOCH NICHT FERTIG
+    public void startAdventure(Player p, Questmaster master) {
+    	master.questUpdate();
+    	master.updateFinishedQuests();
+    	master.updateVisibleQuests();
+    }
+    
+    
+    
     /**
      * Random monster.
      *

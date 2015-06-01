@@ -18,6 +18,7 @@ public class Crawler {
         Level m = new Level(mg.generate(31, 71));
         Scanner sc = new Scanner(System.in);
         Player p = new Player();
+        Questmaster master = new Questmaster(p);
         while (!p.isDefeated()) {
             System.out.println(m);
             m.showPrompt();
@@ -37,7 +38,7 @@ public class Crawler {
                     System.out.println("Ungueltige Richtung");
                 } else {
                     m.move(direction);
-                    m.handleCurrentFieldEvent(p);
+                    m.handleCurrentFieldEvent(p, master);
                 }
             }
             //Monster bewegung?

@@ -56,15 +56,15 @@ public class Quest implements Comparable<Quest> {
 	}
 	
 	public String toString() {
-		if(this.visible) {
+		//if(this.visible) {
 			return  "Name: " + name + "\n" +
 					"Abgeschlossen: " + (finished ? "ja" : "nein") + "\n" +
 					"Vorquest: " + prequest + "\n" +
 					"Notwendiger Questgegenstand: " + target + "\n" +
 					"Notewendige Anzahl an Gegenständen: " + quantity + "\n" ;
-		}
+		//}
 		
-		return  "";
+		//return  "";
 				
 	}
 	
