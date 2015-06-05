@@ -305,9 +305,9 @@ public class Level implements Tiles {
     	master.updateFinishedQuests();
     	master.updateVisibleQuests();
     	//TEST
-    	System.out.println(master.getQ());
+    	/*System.out.println(master.getQ());
     	System.out.println(master.getW());
-    	System.out.println(master.getE());
+    	System.out.println(master.getE());*/
     	
     	master.givePlayerQuests();
     }

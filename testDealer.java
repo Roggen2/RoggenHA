@@ -18,7 +18,7 @@ public class testDealer {
     	master.updateVisibleQuests();
         //System.out.println(master.allQuests);
         //System.out.println(master.finishedQuests);
-    	System.out.println(master.visibleQuests);//NEW
+    	System.out.println(master.getW());//NEW
     	
         
         
