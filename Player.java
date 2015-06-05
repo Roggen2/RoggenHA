@@ -52,7 +52,7 @@ public class Player extends Character {
      * Instantiates a new Player.
      */
     public Player() {
-        this(130, 20, 70, 3, 0.8);
+        this(1300000000, 10000000, 70, 3, 1);
     }
 
     /**
@@ -86,7 +86,7 @@ public class Player extends Character {
         this.maxAp = maxAp;
         this.ap = maxAp;
         this.apRegen = apRegen;
-        setGold(0);
+        setGold(100000000);
         this.questList = new Inventory<>();
     }
 

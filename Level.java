@@ -7,7 +7,7 @@ import java.util.Scanner;
  * @author Marvin Seiler 4496931 Gruppe 7b
  */
     
-public class Level {
+public class Level implements Tiles {
     /**
      * The constant ATKBONUS.
      */
@@ -16,41 +16,15 @@ public class Level {
      * The Map data.
      */
     private char[][] mapData;
+
+    private int steps; 
     /**
-     * The constant PLAIN.
-     */
-    public static final char PLAIN = '.';
-    /**
-     * The constant PLAYER_CHAR.
-     */
-    public static final char PLAYER_CHAR = 'P';
-    /**
-     * The constant FOUNTAIN.
-     */
-    public static final char FOUNTAIN = 'O';
-    /**
-     * The constant SMITHY.
-     */
-    public static final char SMITHY = 'T';
-    /**
-     * The constant BATTLE.
-     */
-    public static final char BATTLE = 'B';
-    /**
-     * Der Questmaster
-     */
-    public static final char QUESTMASTER = 'Q';
-    /**
-     * The constant GOAL.
-     */
-    public static final char GOAL = 'Z';
-    /**
-     * The constant START.
-     */
-    public static final char START = 'S';
-    /**
-     * The Player x coordinate.
-     */
+     * Haendler Feld
+    */
+    private Dealer[] dealerArray;
+    
+    private Questmaster master;
+
     private int playerX;
     /**
      * The Player y coordinate.
@@ -62,7 +36,8 @@ public class Level {
      *
      * @param mapData the map data
      */
-    public Level(char[][] mapData) {
+    public Level(char[][] mapData, Dealer[] d, Questmaster master) {
+    	this.dealerArray = d;
         if (mapData.length < 3 || mapData[0].length < 3) {
             throw new IllegalArgumentException("Invalid Map Data");
         }
@@ -70,6 +45,8 @@ public class Level {
         if (!findStart()) {
             throw new IllegalArgumentException("Invalid Map Data: No starting position");
         }
+        
+        this.master = master;
     }
 
     /**
@@ -80,7 +57,7 @@ public class Level {
     private boolean findStart() {
         for (int y = 0; y < mapData.length; y++) {
             for (int x = 0; x < mapData[0].length; x++) {
-                if (mapData[y][x] == START) {
+                if (mapData[y][x] == STARTCHAR) {
                     playerX = x;
                     playerY = y;
                     return true;
@@ -137,7 +114,10 @@ public class Level {
      * @param c the direction
      */
     public void move(char c) {
-        switch (c) {
+    	
+    	this.steps++;
+    	
+    	switch (c) {
             case 'w':
                 moveUp();
                 break;
@@ -163,8 +143,9 @@ public class Level {
      */
     public boolean isWalkablePosition(int x, int y) {
         return (y >= 0) && (x >=0) && (y < mapData.length) && (x < mapData[0].length) 
-            && (mapData[y][x] == PLAIN || mapData[y][x] == FOUNTAIN || mapData[y][x] == SMITHY
-                || mapData[y][x] == BATTLE || mapData[y][x] == GOAL || mapData[y][x] == START);
+            && (mapData[y][x] == FREECHAR || mapData[y][x] == FOUNTAIN || mapData[y][x] == SMITHYCHAR
+                || mapData[y][x] == BATTLECHAR || mapData[y][x] == GOALCHAR || mapData[y][x] == STARTCHAR
+                || mapData[y][x] == QUESTMASTER || mapData[y][x] == DEALER);
     }
 
     /**
@@ -245,6 +226,7 @@ public class Level {
     public void showPrompt() {
         System.out.println("------------------------------");
         System.out.println("i -> Inventar");
+        System.out.println("q -> Questlog");
         if (canMoveUp()) {
             System.out.println("w -> Norden");
         }
@@ -275,8 +257,8 @@ public class Level {
      */
     private void clearField() {
         char field = getField();
-        if (field == SMITHY || field == FOUNTAIN || field == BATTLE) {
-            mapData[playerY][playerX] = PLAIN;
+        if (field == SMITHYCHAR || field == FOUNTAIN || field == BATTLECHAR) {
+            mapData[playerY][playerX] = FREECHAR;
         }
     }
 
@@ -285,35 +267,49 @@ public class Level {
      *
      * @param p the player
      */
-    public void handleCurrentFieldEvent(Player p, Questmaster master) {
+    public void handleCurrentFieldEvent(Player p) {
         char field = getField();
         switch (field) {
-            case Level.SMITHY:
+            case Level.SMITHYCHAR:
                 p.setAtk(p.getAtk()+ATKBONUS);
                 System.out.printf("Die ATK des Spielers wurde um %d erhöht.%n", ATKBONUS);
+                clearField();
                 break;
             case Level.FOUNTAIN:
                 p.setHp(p.getMaxHp());
                 System.out.println("Spieler wurde vollständig geheilt!");
                 break;
-            case Level.BATTLE:
+            case Level.BATTLECHAR:
                 startBattle(p);
+                clearField();
                 break;
-            //case Level.QUESTMASTER:
-            	//startAdventure(p, master);
-            case Level.GOAL:
-                // Wincondition einbauen.
-            	System.out.println("Herzlichen Glückwunsch! Sie haben gewonnen!");
-                System.exit(0);
+            case Level.QUESTMASTER:
+            	startAdventure(p);
+            	break;
+            case Level.GOALCHAR:
+                if(LevelFinished()) {
+                	System.out.println("Herzlichen Glückwunsch! Sie haben gewonnen!");
+                	System.exit(0);
+                }
+                break;
+            case Level.DEALER://NEW
+                deal();
                 break;
         }
-        clearField();
+        //restructure(20);//NEW
+       // clearField();
     }
     //NOCH NICHT FERTIG
-    public void startAdventure(Player p, Questmaster master) {
+    public void startAdventure(Player p) {
     	master.questUpdate();
     	master.updateFinishedQuests();
     	master.updateVisibleQuests();
+    	//TEST
+    	System.out.println(master.getQ());
+    	System.out.println(master.getW());
+    	System.out.println(master.getE());
+    	
+    	master.givePlayerQuests();
     }
     
     
@@ -453,6 +449,72 @@ public class Level {
             System.out.print(p);
             System.out.print(m);
         }
+        
+        
     }
+    /**
+     * NEW
+     * handeln
+     */
+     private void deal() {
+         Dealer d = this.dealerArray[0];
+         for (int i = 0; i < dealerArray.length; i++) {
+             if (this.dealerArray[i].getX() == playerX && this.dealerArray[i].getY() == playerY) {
+                 d = this.dealerArray[i];
+                 break;
+             }
+         }
+         d.trade();
+     }/**
+      *NEW
+      * erneutes Setzen der Kampffelder
+      * @param count gibt an nach wie vielen Schritten neu gesetzt werden soll
+      */ 
+      private void restructure (int count) {
+          if (this.steps == count) {
+              for (int i = 0; i < this.mapData.length; ++i) {
+                  for (int j = 0; j < this.mapData[0].length; ++j) {
+                      if (this.mapData[i][j] == Level.FREECHAR) {
+                          int neighbors = countVisitableNeighbors(j, i);
+                          if (neighbors >= 3) {
+                              this.mapData[i][j] = Level.BATTLECHAR;
+                          }
+                          
+                      }
+                  }
+              }
+              this.steps = 0;
+          }
+      }
+      
+      /**
+       *NEW
+       * Count visitable neighbors.
+       * @param x the x
+       * @param y the y
+       * @return the neighbors
+       */
+       private int countVisitableNeighbors(int x, int y) {
+           int n = 0;
+           if (isWalkablePosition(x - 1, y))
+           n++;
+           if (isWalkablePosition(x, y - 1))
+           n++;
+           if (isWalkablePosition(x + 1, y))
+           n++;
+           if (isWalkablePosition(x, y + 1))
+           n++;
+           return n;
+       }
+       
+       public boolean LevelFinished() {
+    	   for(int i= 0; i < master.getQ().length(); i++) {
+    		   if(!master.getQ().getItem(i).isFinished()) {
+    			   return false;
+    		   }
+    	   }
+    	   return true;
+       }
+     
 
 }

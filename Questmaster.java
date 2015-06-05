@@ -33,8 +33,8 @@ public class Questmaster {
 			return false;
 		}
 		for(int i= 0; i < costumer.getItemInventory().length(); i++) {
-			if( costumer.getItemInventory().getItem(i).getName().equals( quest.getTarget() )) { // es wird geprüft ob das item im inventar ist.
-				return costumer.getItemInventory().getQuantity(costumer.getItemInventory().getItem(i)) == quest.getQuantity(); // wenn geung da sind gibt es true.
+			if( costumer.getItemInventory().getItem(i).equals( quest.getTarget() )) { // es wird geprüft ob das item im inventar ist.
+				return costumer.getItemInventory().getQuantity(costumer.getItemInventory().getItem(i)) >= quest.getQuantity(); // wenn geung da sind gibt es true.
 			}
 		}
 		return false;
@@ -44,7 +44,8 @@ public class Questmaster {
 		//setzt beendete quests in der liste des masters beendet
 		for(int i= 0; i < allQuests.length(); i++) {
 			if(isQuestfinished(allQuests.getItem(i))) {
-				allQuests.getItem(i).setFinished(true); 
+				allQuests.getItem(i).setFinished(true);
+				removeQuestItem(allQuests.getItem(i));
 			}
 		}
 		for(int i= 0; i < costumer.getQuestList().length(); i++) {
@@ -64,11 +65,15 @@ public class Questmaster {
 	}
 	
 	private void setQuestToVisible(Quest quest) {
-		for(int i= 0; i < allQuests.length(); i++) {
-			if (quest.getPreQuest().equals( allQuests.getItem(i).getName() ) && allQuests.getItem(i).isFinished() ) {//schaut ob vorquest der übergebenen quest erfüllt ist 
+		/*for(int i= 0; i < allQuests.length(); i++) {
+			if (quest.getPreQuest().equals( allQuests.getItem(i) ) && allQuests.getItem(i).isFinished() ) {//schaut ob vorquest der übergebenen quest erfüllt ist 
 				quest.setVisible(true);
 			}
+		}*/
+		if(quest.getPreQuest().isFinished()) {
+			 quest.setVisible(true) ;
 		}
+		
 	}
 	
 	public Inventory<Quest> updateVisibleQuests() {
@@ -80,15 +85,35 @@ public class Questmaster {
 		}
 		return this.visibleQuests;
 	}
-	/*
-	private Inventory<Item> removeQuestItem(Item item, Quest quest) {
+	
+	private Inventory<Item> removeQuestItem(Quest quest) {
 		
 		int quantity = quest.getQuantity();
-		String target = quest.getTarget();
+		Item target = quest.getTarget();
 		
-		while (costumer.getItemInventory())
-	}*/
+		
+		while (quantity != 0) {
+			costumer.getItemInventory().delete(target);
+			quantity--;
+		}
+		return costumer.getItemInventory();
+	}
 	
-
-
+	public void givePlayerQuests() {
+		for(int i= 0; i < visibleQuests.length(); i++) {
+			if(!costumer.getQuestList().isInList(visibleQuests.getItem(i)) ) {
+				costumer.getQuestList().append(visibleQuests.getItem(i));
+			}
+		}
+	}
+	public Inventory<Quest> getQ() {
+		return this.allQuests;
+	}
+	
+	public Inventory<Quest> getW() {
+		return this.visibleQuests;
+	}
+	public Inventory<Quest> getE() {
+		return this.finishedQuests;
+	}
 }

@@ -3,9 +3,9 @@ public class Quest implements Comparable<Quest> {
 	
 	private String name;
 	
-	private String prequest;
+	private Quest prequest;
 	
-	private String target;
+	private Item target;
 	
 	private int quantity;
 	
@@ -13,24 +13,28 @@ public class Quest implements Comparable<Quest> {
 	
 	private boolean visible;
 	
-	public Quest(String name, String prequest, String target, int quantity) {
+	public Quest(String name, Quest prequest, Item target, int quantity) {
 		this.name = name;
 		this.prequest = prequest;
 		this.target = target;
 		this.quantity = quantity;
 		this.finished = false;
-		this.visible = (prequest.equals(""));
-	}
-
-	public int compareTo(Quest quest) {
-		return 0;
+		this.visible = (prequest.getName().equals("Emptyquest"));
 	}
 	
-	public String getTarget() {
+	public Quest() {
+		this.name = "Emptyquest";
+		this.prequest = null;
+		this.target = null;
+		this.quantity = 0;
+	}
+	
+	
+	public Item getTarget() {
 		return this.target;
 	}
 	
-	public String getPreQuest() {
+	public Quest getPreQuest() {
 		return this.prequest;
 	}
 	public int getQuantity() {
@@ -55,20 +59,29 @@ public class Quest implements Comparable<Quest> {
 		this.visible = visible;
 	}
 	
+	public int compareTo(Quest quest) {
+		if(this.name.equals(quest.getName())) {
+			return 0;
+		} else {
+			return 1;
+		}
+		
+	}
 	public String toString() {
-		//if(this.visible) {
+		if(!this.getName().equals("Emptyquest")) {
 			return  "Name: " + name + "\n" +
 					"Abgeschlossen: " + (finished ? "ja" : "nein") + "\n" +
-					"Vorquest: " + prequest + "\n" +
-					"Notwendiger Questgegenstand: " + target + "\n" +
+					"Vorquest: " + prequest.getName() + "\n" +
+					"Notwendiger Questgegenstand: " + target.getName() + "\n" +
 					"Notewendige Anzahl an Gegenständen: " + quantity + "\n" ;
-		//}
 		
-		//return  "";
-				
+		}
+		else {
+			return  "Dies ist die erste Quest dieser Reihe!";
+		}		
 	}
+}	
 	
-	
 
 
 
@@ -86,4 +99,4 @@ public class Quest implements Comparable<Quest> {
 
 
 
-}
+

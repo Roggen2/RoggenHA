@@ -49,13 +49,14 @@ public class Monster extends Character {
      */
     public Monster(String name, int hp, int atk, double hitChance) {
         super(hp, atk, hitChance);
+        MyReader ir = new MyReader("item.csv");
+        Inventory<Item> inv = ir.getItems();
         this.name = name;
-       
-         this.inventory.append(new Item("Gold"));
-         this.inventory.append(new Item("Juwel"));
-         this.inventory.append(new Item("Juwel"));
-         this.inventory.append(new Item("Stein"));
-         this.inventory.append(new Item("Gold"));
+        for (int i = 0; i < inv.length(); i++) {
+            if (Tool.rand(0, inv.length()) <= 2) {
+                this.inventory.insert(inv.getItem(i));
+            }
+        }
     }
 
     /**

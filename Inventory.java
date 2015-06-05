@@ -205,7 +205,8 @@ public class Inventory<T extends Comparable<T> > implements List<T> {
         String s = "";
         if (!this.isEmpty()) {
             for (int i = 0; i < this.length(); i++) {
-                s = s + "-" + (i+1) + "." + getItem(i).toString() + "\n";
+                s = s + "-" + (i+1) + "." + getQuantity(getItem(i)) + " mal " + getItem(i).toString() + "\n";
+                i += getQuantity(getItem(i)) - 1;
             }
         } else {
             s = "leeres Inventar";

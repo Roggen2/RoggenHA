@@ -7,7 +7,7 @@ import java.util.Random;
  * @author Marvin Seiler 4496931 Gruppe 7b
  */
     
-public class RecursiveBacktracker implements MazeGenerator {
+public class RecursiveBacktracker implements MazeGenerator, Tiles {
 
     /**
      * The Offsets.
@@ -31,10 +31,19 @@ public class RecursiveBacktracker implements MazeGenerator {
     private Random r = new Random();
 
     /**
+     *Array mit den Haendlern
+     */
+     private Dealer[] dealerArray; //NEW
+    /**
      * The Goal set.
      */
     private boolean goalSet = false;
-
+    
+    
+    public RecursiveBacktracker(Dealer[] array) { //NEW
+        this.dealerArray = array;
+    }
+    
     /**
      * Valid new position.
      *
@@ -53,7 +62,49 @@ public class RecursiveBacktracker implements MazeGenerator {
         return maze[newY][newX] == WALLCHAR;
 
     }
-
+    
+    /**
+     * NEW
+     * setzt einen dealer in ein 3x3 feld um die parameter
+     * @param centerW x koordinate des Zentrums
+     * @param centerH y koordinate des Zentrums
+     * @param maze maze
+     * @d das Dealer Objekt das dort platziert werden soll
+     * @return das maze
+     */
+     private char[][] placeIn3x3Cluster(int centerW, int centerH, char[][] maze, Dealer d) {
+         if (maze[centerH][centerW] == FREECHAR) {
+             maze[centerH][centerW] = DEALER;
+             System.out.println(d);
+             d.setPos(centerW, centerH);
+         } else {
+             a: for (int i = -1; i <= 1; i++) {
+                 for (int j = -1; j <= 1; j++) {
+                     if (maze[centerH + i][centerW + j] == FREECHAR) {
+                         maze[centerH + i][centerW + j] = DEALER;
+                         d.setPos(centerW + j, centerH + i);
+                         break a; 
+                     }
+                 }
+             }
+         }
+         return maze;
+     }
+     
+     /**
+      * NEW
+      * platziert 4 dealer in die 4 Quardranten des maze
+      * @param maze maze
+      */
+      private void placeDealer(char[][] maze) {
+          int height = maze.length;
+          int width = maze[0].length;
+          maze = placeIn3x3Cluster((width + 3) / 4, (height + 3) / 4, maze, dealerArray[0]);
+          maze = placeIn3x3Cluster((3 * width + 1) / 4, (height + 3) / 4, maze, dealerArray[1]);
+          maze = placeIn3x3Cluster((width + 3) / 4, (3 * height + 1) / 4, maze, dealerArray[2]);
+          maze = placeIn3x3Cluster((3 * width + 1) / 4, (3 * height + 1) / 4, maze, dealerArray[3]);
+      }
+    
     /**
      * Init maze.
      *
@@ -130,7 +181,8 @@ public class RecursiveBacktracker implements MazeGenerator {
      * @param maze the maze
      */
     private void placeSpecialFields(char[][] maze) {
-        for (int i = 0; i < maze.length; ++i) {
+    	placeDealer(maze);
+    	for (int i = 0; i < maze.length; ++i) {
             for (int j = 0; j < maze[0].length; ++j) {
                 if (maze[i][j] == FREECHAR) {
                     int neighbors = countVisitableNeighbors(maze, j, i);
@@ -138,7 +190,7 @@ public class RecursiveBacktracker implements MazeGenerator {
                         maze[i][j] = BATTLECHAR;
                     } else if (neighbors == 1) {
                         if (r.nextDouble() > 0.5) {
-                            maze[i][j] = WELLCHAR;
+                            maze[i][j] = FOUNTAIN;
                         } else {
                             maze[i][j] = SMITHYCHAR;
                         }
@@ -147,15 +199,14 @@ public class RecursiveBacktracker implements MazeGenerator {
             }
         }
     }
-
     /**
      * Generate char [ ] [ ].
-     *
+     *yx
      * @param height the height
      * @param width the width
      * @return the map as char[][]
      */
-    @Override
+
     public char[][] generate(int height, int width) {
         if (height < 2 || width < 2) {
             throw new IllegalArgumentException("Non-valid maze dimensions");
@@ -166,8 +217,14 @@ public class RecursiveBacktracker implements MazeGenerator {
         int starty = 2*r.nextInt(height/2)+1;
         maze = generate(startx, starty,  maze);
         maze[starty][startx] = STARTCHAR;
-        //maze = border(maze);
+        for(int[] direction:offsets) {
+        	if(maze[starty+direction[0]][startx+direction[1]] != WALLCHAR ) {
+        		maze[starty+direction[0]][startx+direction[1]] = QUESTMASTER;
+        	}
+        }
+        maze = border(maze);
         placeSpecialFields(maze);
+        removeStones(maze);
         return maze;
     }
 
@@ -232,6 +289,22 @@ public class RecursiveBacktracker implements MazeGenerator {
             maze[curY][curX] = GOALCHAR;
         }
         return maze;
+    }
+    
+    /**
+     * test methode zum entfernen aller steine
+     * für TESTZWECKE
+     */
+    
+    private void removeStones(char[][] maze) {
+    	for(int i = 1; i < maze.length -1; i++) {
+    		for (int j = 1; j < maze[i].length-1; j++) {
+    			if(maze[i][j] == WALLCHAR) {
+    				maze[i][j] = FREECHAR;
+    			}
+    			
+    		}
+    	}
     }
 
 }
