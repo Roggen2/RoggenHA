@@ -32,9 +32,9 @@ public class Questmaster {
 		if( !quest.isVisible()) {
 			return false;
 		}
-		for(int i= 0; i < costumer.getItemInventory().length(); i++) {
-			if( costumer.getItemInventory().getItem(i).equals( quest.getTarget() )) { // es wird geprüft ob das item im inventar ist.
-				return costumer.getItemInventory().getQuantity(costumer.getItemInventory().getItem(i)) >= quest.getQuantity(); // wenn geung da sind gibt es true.
+		for(Item item : costumer.getItemInventory()) {
+			if( item.equals( quest.getTarget() )) { // es wird geprüft ob das item im inventar ist.
+				return costumer.getItemInventory().getQuantity(item) >= quest.getQuantity(); // wenn geung da sind gibt es true.
 			}
 		}
 		return false;
@@ -67,23 +67,23 @@ public class Questmaster {
 	//ändert den status der quests bei spieler und questmaster
 	public Inventory<Quest> questUpdate() {
 		//setzt beendete quests in der liste des masters beendet
-		for(int i= 0; i < allQuests.length(); i++) {
-			if(isQuestfinished(allQuests.getItem(i))) {
-				allQuests.getItem(i).setFinished(true);
-				removeQuestItem(allQuests.getItem(i));
+		for(Quest quest : allQuests) {
+			if(isQuestfinished(quest)) {
+				quest.setFinished(true);
+				removeQuestItem(quest);
 			}
 		}
-		for(int i= 0; i < costumer.getQuestList().length(); i++) {
-			if(isQuestfinished(costumer.getQuestList().getItem(i))) {
-				costumer.getQuestList().delete(costumer.getQuestList().getItem(i));//entfernt beendete quests aus der liste des spielers.
+		for(Quest quest : costumer.getQuestList()) {
+			if(isQuestfinished(quest)) {
+				costumer.getQuestList().delete(quest);//entfernt beendete quests aus der liste des spielers.
 			}
 		}
 		return costumer.getQuestList();
 	}
 	public Inventory<Quest> updateFinishedQuests() {
-		for(int i= 0; i < allQuests.length(); i++) {
-			if(allQuests.getItem(i).isFinished() && !finishedQuests.isInList(allQuests.getItem(i)) ) {
-				finishedQuests.append(allQuests.getItem(i));// hängt neue beendete quests hinten an die entsprechende liste dran.
+		for(Quest quest : allQuests) {
+			if(quest.isFinished() && !finishedQuests.isInList(quest) ) {
+				finishedQuests.append(quest);// hängt neue beendete quests hinten an die entsprechende liste dran.
 				
 			}
 		}
@@ -91,19 +91,19 @@ public class Questmaster {
 	}
 	
 	public Inventory<Quest> updateVisibleQuests() {
-		for(int i= 0; i < allQuests.length(); i++) {
-			this.setQuestToVisible(allQuests.getItem(i));
-			if(!visibleQuests.isInList(allQuests.getItem(i)) && allQuests.getItem(i).isVisible() ) {
-				visibleQuests.append(allQuests.getItem(i));   // hängt neue beendete quests hinten an die entsprechende liste dran.
+		for(Quest quest : allQuests) {
+			this.setQuestToVisible(quest);
+			if(!visibleQuests.isInList(quest) && quest.isVisible() ) {
+				visibleQuests.append(quest);   // hängt neue beendete quests hinten an die entsprechende liste dran.
 			}
 		}
 		return this.visibleQuests;
 	}
 	
 	public void givePlayerQuests() {
-		for(int i= 0; i < visibleQuests.length(); i++) {
-			if(!costumer.getQuestList().isInList(visibleQuests.getItem(i)) && !visibleQuests.getItem(i).isFinished()) {
-				costumer.getQuestList().append(visibleQuests.getItem(i));
+		for(Quest quest : visibleQuests) {
+			if(!costumer.getQuestList().isInList(quest) && !quest.isFinished()) {
+				costumer.getQuestList().append(quest);
 			}
 		}
 	}

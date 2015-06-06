@@ -8,6 +8,8 @@
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.Iterator;
+
 public class Test {
    public static void main(String[] args) throws IOException  {
       Inventory<Item> i = new Inventory<Item>();
@@ -22,7 +24,15 @@ public class Test {
       i.insert(new Item("aaaa"));
       i.insert(new Item("ababjb"));
       i.insert(new Item("zzz"));
-      System.out.println(i);
+ /*     Iterator<Item> it = i.iterator();
+      for ( Item item = it.next(); it.hasNext(); ) {
+    	  System.out.println(item);
+    	  
+      }*/
+      for(Item items : i) {
+    	  System.out.println(items);
+      }
+      //System.out.println(i);
       
      /* BufferedReader b = new BufferedReader(new FileReader("item.csv"));
       System.out.println(b.readLine());

@@ -1,3 +1,5 @@
+import java.util.*;
+
   /**
  * Dies ist das Inventar modelliert mit einer einfachverketteten Liste
  * 
@@ -5,7 +7,7 @@
  * @author Marvin Seiler 4496931 Gruppe 7b
  */
     
-public class Inventory<T extends Comparable<T> > implements List<T> {
+public class Inventory<T extends Comparable<T> > implements List<T> ,Iterable<T> {
     /**
      *Item des Knotens.
      */
@@ -23,6 +25,36 @@ public class Inventory<T extends Comparable<T> > implements List<T> {
     }
 
     /**
+	 * Findet Inventarplatz mit diesem Item
+	 * @param x Item
+	 * @return Inventarplatz
+	 */
+	private Inventory<T> find(T x) {
+	    if (isEmpty()) {
+	        return null;
+	    } else {
+	        if (firstItem().equals(x)) {
+	            return this;
+	        } else {
+	            return next.find(x);
+	        }
+	    }
+	}
+
+	/**
+	 * Fuegt das Item an den Anfang der Liste an
+	 * @param x Item
+	 * @return Veraenderte Liste.
+	 */
+	private Inventory<T> insert1(T x) {
+	    Inventory<T> l = new Inventory<T>();
+	    l.item = x;
+	    l.next = next;
+	    next = l;
+	    return this;
+	}
+
+	/**
      * Liefert das Item des Knotens.
      * @return Item
      */
@@ -100,19 +132,6 @@ public class Inventory<T extends Comparable<T> > implements List<T> {
     }
 
     /**
-     * Fuegt das Item an den Anfang der Liste an
-     * @param x Item
-     * @return Veraenderte Liste.
-     */
-    private Inventory<T> insert1(T x) {
-        Inventory<T> l = new Inventory<T>();
-        l.item = x;
-        l.next = next;
-        next = l;
-        return this;
-    }   
-
-   /**
     * Haengt das Item hinten an.
     * @param x Item
     * @return Veraenderte Liste.
@@ -146,23 +165,6 @@ public class Inventory<T extends Comparable<T> > implements List<T> {
                 return next.insert(x);
         }
     }
-    /**
-     * Findet Inventarplatz mit diesem Item
-     * @param x Item
-     * @return Inventarplatz
-     */
-    private Inventory<T> find(T x) {
-        if (isEmpty()) {
-            return null;
-        } else {
-            if (firstItem().equals(x)) {
-                return this;
-            } else {
-                return next.find(x);
-            }
-        }
-    }
-
     /**
      * Entfernt das erste Item dieser Art aus der Liste
      * @param x Item
@@ -213,6 +215,33 @@ public class Inventory<T extends Comparable<T> > implements List<T> {
         }
         return s;
         //return isEmpty() ? "leeres Inventar" : "-" + next.item.toString()+next.next.toString();
+    }
+    
+    public Iterator<T> iterator() {
+    	return new MyIterator<T>();
+    }
+    
+    private class MyIterator<T> implements Iterator<T> {
+    	
+    	
+    	private int position;
+    	
+  
+    	public T next() {
+    		if(hasNext()) {
+    			position++;
+    			return  (T) getItem(position-1);
+    		}
+    		return null;
+    	}
+    	
+    	public boolean hasNext() {
+    		return !(position == length());
+    	}	
+    	
+    	public void remove() {
+    		throw new UnsupportedOperationException();
+    	}
     }
     
     
